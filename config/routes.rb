@@ -77,6 +77,9 @@ Hitobito::Application.routes.draw do
           post :send_password_instructions
           put :primary_group
 
+          patch :totp_reset
+          patch :totp_disable
+
           get 'history' => 'person/history#index'
           get 'log' => 'person/log#index'
           get 'colleagues' => 'person/colleagues#index'
@@ -280,6 +283,9 @@ Hitobito::Application.routes.draw do
       get 'users/edit' => 'devise/registrations#edit', :as => 'edit_person_registration'
       put 'users' => 'devise/registrations#update', :as => 'person_registration'
       get 'users' => 'devise/registrations#edit' # route required for language switch
+
+      get 'users/totp' => 'totp#new', as: 'new_users_totp'
+      post 'users/totp' => 'totp#create', as: 'users_totp'
 
       post 'users/token' => 'devise/tokens#create'
       delete 'users/token' => 'devise/tokens#destroy'

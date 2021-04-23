@@ -394,6 +394,21 @@ de:
       attachment:
         subject: 'Nachrichten Betreff:'
 
+  totp:
+    flash:
+      success:
+        registered: Zwei Faktor Authentifizierung erfolgreich aktiviert
+        signed_in: Erfolgreich eingeloggt
+
+      failure: One-Time Code inkorrekt
+    new:
+      title: Zwei Faktor Authentifizierung
+      hint_registered_html: "Geben Sie bitte den angezeigten Code auf Ihrer %{link} an um Ihre Identität zu bestätigen."
+      hint_unregistered_html: "Scannen Sie bitte den QR Code mit ihrem Smartphone mittels der %{link} und geben Sie den angezeigten Code an um die zwei Faktor Authentifizierung zu aktivieren."
+    form:
+      totp_code: One-Time Code
+      totp_code_placeholder: Bitte Sechsstelligen Code eingeben...
+      submit: Absenden
   events:
     actions_show:
       copy_share_link: Direktlink kopieren
@@ -1158,6 +1173,8 @@ de:
     send_password_instructions: Login Informationen wurden verschickt.
     send_password_instructions_invalid_email: Die Login-Informationen wurden nicht verschickt da die hinterlegte E-Mail Adresse ungültig ist.
     years_old: (%{years} Jahre alt)
+    totp_reset: Zwei Faktor Authentifizierung erfolgreich zurückgesetzt
+    totp_disable: Zwei Faktor Authentifizierung erfolgreich deaktiviert
 
     tabs:
       history: Verlauf
@@ -1172,6 +1189,9 @@ de:
         new: Die Person hat noch kein Login.<br><br>Diese Aktion sendet ihr einen Link damit sie ihr Passwort setzen kann.
         resend: Die Person hat einen Link zum Setzen des Passworts erhalten, aber noch keines gesetzt.<br><br>Diese Aktion sendet ihr den Link erneut.
         reset: Person hat ein Login.<br><br>Diese Aktion sendet ihr einen Link, damit sie ihr Passwort neu setzen kann.
+      activate_totp: Zwei Faktor Authentifizierung einrichten
+      reset_totp: Zwei Faktor Authentifizierung zurücksetzen
+      disable_totp: Zwei Faktor Authentifizierung deaktivieren
 
       impersonate_user: Imitieren
       impersonate_user_tooltip: Du kannst hitobito so bedienen, als wärst du als diese Person eingeloggt.

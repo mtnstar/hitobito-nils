@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_03_115635) do
+ActiveRecord::Schema.define(version: 2021_04_09_064557) do
 
   create_table "action_text_rich_texts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -658,6 +658,8 @@ ActiveRecord::Schema.define(version: 2021_03_03_115635) do
     t.string "household_key"
     t.string "event_feed_token"
     t.string "unlock_token"
+    t.integer "second_factor_auth", default: 0, null: false
+    t.text "encrypted_totp_secret"
     t.index ["authentication_token"], name: "index_people_on_authentication_token"
     t.index ["email"], name: "index_people_on_email", unique: true
     t.index ["event_feed_token"], name: "index_people_on_event_feed_token", unique: true

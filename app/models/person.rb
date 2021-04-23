@@ -74,7 +74,8 @@ class Person < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     :last_label_format_id, :failed_attempts, :last_sign_in_at, :last_sign_in_ip,
     :locked_at, :remember_created_at, :reset_password_token, :unlock_token,
     :reset_password_sent_at, :sign_in_count, :updated_at, :updater_id,
-    :show_global_label_formats, :household_key, :event_feed_token
+    :show_global_label_formats, :household_key, :event_feed_token, :second_factor_auth,
+    :encrypted_totp_secret
   ]
 
   FILTER_ATTRS = [ # rubocop:disable Style/MutableConstant meant to be extended in wagons
@@ -105,6 +106,10 @@ class Person < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
   i18n_enum :gender, GENDERS
   i18n_setter :gender, (GENDERS + [nil])
   i18n_boolean_setter :company
+
+  enum second_factor_auth: [:no_second_factor, :totp]
+
+  serialize :encrypted_totp_secret
 
   mount_uploader :picture, Person::PictureUploader
 
@@ -265,6 +270,18 @@ class Person < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     end
   end
 
+  def totp_secret
+    return unless encrypted_totp_secret.present?
+
+    encrypted_value = encrypted_totp_secret[:encrypted_value]
+    iv = encrypted_totp_secret[:iv]
+    EncryptionService.decrypt(encrypted_value, iv) if encrypted_value.present?
+  end
+
+  def totp_secret=(value)
+    self.encrypted_totp_secret = EncryptionService.encrypt(value)
+  end
+
   def person_name(format = :default)
     name = full_name(format)
     name << " / #{nickname}" if nickname? && format != :print_list
@@ -350,6 +367,20 @@ class Person < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
 
   def address_for_letter
     Person::Address.new(self).for_letter
+  end
+
+  def second_factor_required?
+    !no_second_factor? || totp_forced?
+  end
+
+  def totp_registered?
+    encrypted_totp_secret.present?
+  end
+
+  def totp_forced?
+    roles.any? do |role|
+      Settings.totp&.forced_roles&.include?(role.type)
+    end
   end
 
   private

@@ -717,4 +717,34 @@ describe Person do
     person = Person.find(person.id)
     expect(person.shared_access_token).to be_nil
   end
+
+  describe 'encrypted_totp_secret' do
+    let(:person) { people(:bottom_member) }
+
+    it 'is being encrypted when generated' do
+      person.totp_secret = People::OneTimePassword.generate_secret
+
+      person.save!
+
+      person.reload
+
+      expect(person.encrypted_totp_secret).to_not be_nil
+      expect(person.encrypted_totp_secret[:iv]).to_not be_nil
+      expect(person.encrypted_totp_secret[:encrypted_value]).to_not be_nil
+    end
+
+    it 'is being encrypted and correctly decrypted' do
+      decrypted_secret = ROTP::Base32.random
+
+      person.totp_secret = decrypted_secret
+
+      person.save!
+
+      person.reload
+
+      expect(person.encrypted_totp_secret).to_not be_nil
+
+      expect(person.totp_secret).to eq(decrypted_secret)
+    end
+  end
 end
